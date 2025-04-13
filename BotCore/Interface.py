@@ -1,5 +1,9 @@
-from config import NGCBOT_API
+from config import NGCBOT_API, NGCBot_KEY
 import aiohttp
+
+headers = {
+    'BotKey': NGCBot_KEY
+}
 
 
 async def sendPostReq(api: str, data: dict):
@@ -12,7 +16,7 @@ async def sendPostReq(api: str, data: dict):
     sendApi = f'{NGCBOT_API}{api}'
     try:
         async with aiohttp.ClientSession() as session:
-            resp = await session.post(sendApi, json=data, timeout=20)
+            resp = await session.post(sendApi, headers=headers, json=data, timeout=20)
             jsonData = await resp.json()
             return jsonData
     except Exception as e:
@@ -29,7 +33,7 @@ async def sendGetReq(api: str, params: dict):
     sendApi = f'{NGCBOT_API}{api}'
     try:
         async with aiohttp.ClientSession() as session:
-            resp = await session.get(sendApi, params=params, timeout=20)
+            resp = await session.get(sendApi, headers=headers, params=params, timeout=20)
             jsonData = await resp.json()
             return jsonData
     except Exception as e:

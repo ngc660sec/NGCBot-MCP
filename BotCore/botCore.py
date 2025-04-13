@@ -1,4 +1,5 @@
 from BotCore.Interface import *
+import base64
 
 
 async def send_text(text: str, receiver: str):
@@ -9,6 +10,19 @@ async def send_text(text: str, receiver: str):
     :return:
     """
     jsonData = await sendPostReq('/text', {'msg': text, 'receiver': receiver})
+    message = jsonData.get('message')
+    return message
+
+
+async def send_image(imgPath: str, receiver: str):
+    """
+    给微信好友或群聊发送图片
+    :param imgPath:
+    :param receiver:
+    :return:
+    """
+    imgBase64Data = base64.b64encode(open(imgPath, 'rb').read()).decode()
+    jsonData = await sendPostReq('/send-image', {'base64ImgData': imgBase64Data, 'receiver': receiver})
     message = jsonData.get('message')
     return message
 
