@@ -13,6 +13,6 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # 创建FastMCP实例
-mcp = FastMCP("NGCBot-MCP-Server", dependencies=["requests", "fastmcp", "aiohttp"], description='NGCBotMCP服务', version='0.1.0')
+mcp = FastMCP("NGCBot-MCP-Server", dependencies=["requests", "fastmcp", "aiohttp", "base64"], description='NGCBotMCP服务', version='0.1.0')
 register_tools(mcp)
 

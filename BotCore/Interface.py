@@ -1,7 +1,6 @@
 from config import NGCBOT_API, NGCBot_KEY
 import aiohttp
 import base64
-import asyncio
 
 headers = {
     'BotKey': NGCBot_KEY
@@ -97,9 +96,3 @@ async def sendGetReq(api: str, params: dict):
         raise ConnectionError(f'NGCBot接口服务出现错误, 错误信息: {e}')
 
 
-async def main():
-    result = await uploadFile('/Users/exm/Python/MCP/NGCBot-MCP-Server/test.py')
-    print(result)
-
-
-asyncio.run(main())
