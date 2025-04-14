@@ -3,6 +3,56 @@ from typing import Optional, List, Dict, Any
 
 
 def register_tools(mcp):
+    @mcp.tool('send_file', description='给微信好友或群聊发送文件')
+    async def send_file(filePath: str, receiver: str):
+        """
+        给微信好友或群聊发送文件
+        :param filePath:
+        :param receiver: 接收者的wxId(个人)或群聊wxId(群聊) 如: wxid_123 或 123@chatroom
+        :return:
+        """
+        if not filePath or filePath.strip() == "":
+            raise ValueError('文件路径不能为空!')
+
+        if not receiver or receiver.strip() == "":
+            raise ValueError('接收者不能为空!')
+
+        if 'wxid_' not in receiver and '@chatroom' not in receiver:
+            receiver = bc.get_wxId(wxName=receiver)
+            if 'wxid_' not in receiver and '@chatroom' not in receiver:
+                raise ValueError('请提供有效的wxId或群聊ID! 可以使用get_wxid工具获取')
+        try:
+            message = await bc.send_file(filePath, receiver)
+            return {"status": "success", "message": message}
+        except Exception as e:
+            return {"status": "error", "message": f"发送失败: {str(e)}"}
+
+    @mcp.tool('send_image', description='给微信好友或群聊发送图片')
+    async def send_image(imgPath: str, receiver: str):
+        """
+        给微信好友或群聊发送图片
+
+        :param imgPath: 图片路径或图片链接
+        :param receiver: 接收者的wxId(个人)或群聊wxId(群聊) 如: wxid_123 或 123@chatroom
+        :return: 发送结果
+        """
+        if not imgPath or imgPath.strip() == "":
+            raise ValueError('图片路径不能为空!')
+
+        if not receiver or receiver.strip() == "":
+            raise ValueError('接收者不能为空!')
+
+        if 'wxid_' not in receiver and '@chatroom' not in receiver:
+            receiver = bc.get_wxId(wxName=receiver)
+            if 'wxid_' not in receiver and '@chatroom' not in receiver:
+                raise ValueError('请提供有效的wxId或群聊ID! 可以使用get_wxid工具获取')
+
+        try:
+            message = await bc.send_image(imgPath, receiver)
+            return {"status": "success", "message": message}
+        except Exception as e:
+            return {"status": "error", "message": f"发送失败: {str(e)}"}
+
     @mcp.tool("send_text", description='给微信好友或群聊发送文本消息')
     async def send_message(text: str, receiver: str):
         """

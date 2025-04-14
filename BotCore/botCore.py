@@ -21,7 +21,7 @@ async def send_image(imgPath: str, receiver: str):
     :param receiver:
     :return:
     """
-    imgBase64Data = base64.b64encode(open(imgPath, 'rb').read()).decode()
+    imgBase64Data = await getImgBase64Data(imgPath)
     jsonData = await sendPostReq('/send-image', {'base64ImgData': imgBase64Data, 'receiver': receiver})
     message = jsonData.get('message')
     return message
@@ -36,6 +36,20 @@ async def push_msg(text: str, roomType: str):
     """
     jsonData = await sendPostReq('/send-room-text', {'msg': text, 'roomType': roomType})
     message = jsonData.get('message')
+    return message
+
+
+async def send_file(filePath: str, receiver: str):
+    """
+    给微信好友或群聊发送文件
+    :param filePath:
+    :param receiver:
+    :return:
+    """
+    if 'http://' in filePath or 'https://' in filePath:
+        filePath = await uploadFile(filePath)
+    uploadData = await sendPostReq('/upload-file', {'filePath': filePath, 'receiver': receiver})
+    message = uploadData.get('message')
     return message
 
 
